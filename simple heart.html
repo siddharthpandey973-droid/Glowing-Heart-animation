@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glowing Heart Animation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .heart-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart {
+      width: 100px;
+      height: 100px;
+      background: #ff2e2e;
+      position: relative;
+      transform: rotate(-45deg);
+      box-shadow: 0 0 25px #ff2e2e, 0 0 60px #ff2e2e;
+      animation: glow 2s infinite ease-in-out;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: #ff2e2e;
+      border-radius: 50%;
+      box-shadow: 0 0 25px #ff2e2e, 0 0 60px #ff2e2e;
+    }
+
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+
+    @keyframes glow {
+      0% {
+        transform: rotate(-45deg) scale(1);
+        box-shadow: 0 0 25px #ff2e2e, 0 0 60px #ff2e2e;
+      }
+      50% {
+        transform: rotate(-45deg) scale(1.2);
+        box-shadow: 0 0 35px #ff2e2e, 0 0 90px #ff2e2e;
+      }
+      100% {
+        transform: rotate(-45deg) scale(1);
+        box-shadow: 0 0 25px #ff2e2e, 0 0 60px #ff2e2e;
+      }
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 30px;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 1px;
+    }
+
+    /* Burst dots */
+    .burst-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #ff6b6b 40%, #ff2e2e 100%);
+      pointer-events: none;
+      transform-origin: center;
+      transition: transform .55s cubic-bezier(.2,.9,.3,1), opacity .45s ease;
+      z-index: 10;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="heartBtn" class="heart-btn" aria-pressed="false" aria-label="Like">
+    <span class="heart"></span>
+  </button>
+  <p class="hint">Click the heart ❤️</p>
+
+  <script>
+    const btn = document.getElementById('heartBtn');
+    const heart = btn.querySelector('.heart');
+
+    btn.addEventListener('click', () => {
+      const burstCount = 8;
+      for (let i = 0; i < burstCount; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'burst-dot';
+        const angle = (i / burstCount) * Math.PI * 2;
+        const dist = 60 + Math.random() * 30;
+        dot.style.left = '50%';
+        dot.style.top = '50%';
+        dot.style.transform = `translate(-50%, -50%)`;
+        btn.appendChild(dot);
+
+        requestAnimationFrame(() => {
+          dot.style.transform = `translate(-50%, -50%) translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(.3)`;
+          dot.style.opacity = '0';
+        });
+
+        setTimeout(() => dot.remove(), 600);
+      }
+    });
+  </script>
+
+</body>
+</html>
